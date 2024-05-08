@@ -27,4 +27,4 @@ jobs:
         name: Deploy
         run: |
           sam build
-          sam deploy --parameter-overrides "OpenAiApiKey=${{ secrets.OPENAI_API_KEY }}" "PineconeApiKey=${{ secrets.PINECONE_API_KEY }}"
+          sam deploy --parameter-overrides "OpenAiApiKey=${{ secrets.OPENAI_API_KEY }}" "PineconeApiKey=${{ secrets.PINECONE_API_KEY }}" 
