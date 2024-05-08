@@ -3,7 +3,7 @@ import pinecone
 import openai
 import os
 
-openai_client = openai.Client(os.environ["OPENAI_API_KEY"])
+openai_client = openai.Client(api_key=os.environ["OPENAI_API_KEY"])
 pinecone_client = pinecone.Pinecone(api_key=os.environ["PINECONE_API_KEY"])
 
 
