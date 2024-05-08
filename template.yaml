@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  emoji-api
+
+  Sample SAM Template for emoji-api
+
+Parameters:
+  PineconeApiKey:
+    Type: String
+  OpenAiApiKey:
+    Type: String
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+    Environment:
+      Variables:
+        OPENAI_API_KEY: !Ref OpenAiApiKey
+        PINECONE_API_KEY: !Ref PineconeApiKey
+
+Resources:
+  SearchFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: search/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        Search:
+          Type: Api
+          Properties:
+            Path: /search
+            Method: get
+
+Outputs:
+  SearchApi:
+    Description: "API Gateway endpoint URL for Prod stage for search function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/search/"
+  SearchFunction:
+    Description: "Search Lambda Function ARN"
+    Value: !GetAtt SearchFunction.Arn
+  SearchFunctionIamRole:
+    Description: "Implicit IAM Role created for Search function"
+    Value: !GetAtt SearchFunctionRole.Arn

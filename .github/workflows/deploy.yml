@@ -1,0 +1,28 @@
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+      - shell: bash
+        name: Deploy
+        run: |
+          pip install -r requirements.txt
+          sam build
+          sam deploy --parameter-overrides "OpenAiApiKey=${{ secrets.OPENAI_API_KEY }}" "PineconeApiKey=${{ secrets.PINECONE_API_KEY }}"
