@@ -16,7 +16,5 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
-        "body": json.dumps([{
-            "emoji": e.metadata["emoji"]
-        } for e in results["matches"]]),
+        "body": json.dumps([e.metadata for e in results["matches"]]),
     }
