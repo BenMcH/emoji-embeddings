@@ -7,7 +7,7 @@ openai_client = openai.Client(os.environ["OPENAI_API_KEY"])
 pinecone_client = pinecone.Pinecone(api_key=os.environ["PINECONE_API_KEY"])
 
 
-def lambda_handler(event, context):
+def lambda_handler(event):
     query = event["queryStringParameters"]["query"]
 
     embedding = openai_client.embeddings.create(query, model="text-embedding-3-small").data[0].embedding
