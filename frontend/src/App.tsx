@@ -11,6 +11,7 @@ type EmojiResponse = {
 
 function App() {
   const [results, setResults] = createSignal<EmojiResponse[]>([]);
+  const [pending, setPending] = createSignal(false);
   const [searchTerm, setSearchTerm] = createSignal<string>("");
 
   createEffect(async () => {
@@ -18,13 +19,18 @@ function App() {
 
     if (query) {
       const qp = new URLSearchParams({ query })
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}?${qp.toString()}`);
+      setPending(true);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}?${qp.toString()}`);
 
-      const emojis = await response.json()
+        const emojis = await response.json()
 
-      setResults(emojis);
+        setResults(emojis);
+      } finally {
+        setPending(false);
+      }
     }
-  })
+  });
 
   const submit = (event: Event & { currentTarget: HTMLFormElement }) => {
     event.preventDefault();
@@ -38,14 +44,9 @@ function App() {
   return (
     <>
       <h1>Emoji Search</h1>
-      <div class="card">
-        {/* <button onClick={() => setCount((count) => count + 1)}>
-          count is {count()}
-        </button> */}
-      </div>
-      <form onSubmit={submit}>
+      <form onSubmit={submit} inert={pending()}>
         <input type="search" name="query" />
-        <button type="submit">Search</button>
+        <button type="submit">{pending() ? "Loading..." : "Search"}</button>
       </form>
       <ul class="results">
         <For each={results()}>{(emoji) =>
