@@ -16,7 +16,7 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
-        "body": json.dumps([e.metadata for e in results["matches"]]),
+        "body": json.dumps([{**e.metadata, "score": e.score} for e in results["matches"]]),
         "headers": {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET"
