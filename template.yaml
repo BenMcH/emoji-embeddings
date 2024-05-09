@@ -20,6 +20,10 @@ Globals:
       Variables:
         OPENAI_API_KEY: !Ref OpenAiApiKey
         PINECONE_API_KEY: !Ref PineconeApiKey
+  Api:
+      Cors:
+          AllowMethods: "'GET,POST,OPTIONS'"
+          AllowOrigin: "'*'"
 
 Resources:
   SearchFunction:
